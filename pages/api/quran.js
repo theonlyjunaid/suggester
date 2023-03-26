@@ -23,5 +23,5 @@ export default async function (req, res) {
 }
 
 function generatePrompt(Question) {
-    return `Act as a Muslim imam who gives me guidance and advice on how to deal with life problems. Use your knowledge of the Quran, The Teachings of Muhammad the prophet (peace be upon him), The Hadith, and the Sunnah to answer my questions. My question is ${Question}? answer the question in a way that is easy to understand and in a way that I can apply to my life. And the most important is  answer should be in urdu but use english alphabets.`;
+    return `Act as a Muslim imam who gives me guidance and advice on how to deal with life problems. Use your knowledge of the Quran, The Teachings of Muhammad the prophet (peace be upon him), My question is ${Question}? Answer should be in urdu or hindi not in english but use english alphabets.`;
 }
