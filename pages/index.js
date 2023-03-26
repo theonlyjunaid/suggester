@@ -1,58 +1,65 @@
-import Head from "next/head";
-import { useState } from "react";
-import styles from "./index.module.css";
+import Head from 'next/head';
+import React from 'react';
+import { useState } from 'react';
+import styles from './index.module.css';
 
-export default function Home() {
-  const [animalInput, setAnimalInput] = useState("");
-  const [result, setResult] = useState();
-
-  async function onSubmit(event) {
-    event.preventDefault();
-    try {
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ animal: animalInput }),
-      });
-
-      const data = await response.json();
-      if (response.status !== 200) {
-        throw data.error || new Error(`Request failed with status ${response.status}`);
-      }
-
-      setResult(data.result);
-      setAnimalInput("");
-    } catch(error) {
-      // Consider implementing your own error handling logic here
-      console.error(error);
-      alert(error.message);
+const index = () => {
+    const [Question, setQuestion] = useState("")
+    const [result, setResult] = useState('');
+    const [loading, setLoading] = useState(false);
+    async function onSubmit(event) {
+        event.preventDefault();
+        if (loading) {
+            return;
+        }
+        setLoading(true);
+        setResult('');
+        const response = await fetch('/api/quran', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({Question}),
+        });
+        const data = await response.json();
+        setResult(data.result.replaceAll('\\n', '<br />'));
+        setLoading(false);
     }
-  }
-
   return (
     <div>
-      <Head>
-        <title>OpenAI Quickstart</title>
-        <link rel="icon" href="/dog.png" />
-      </Head>
+          <main className={styles.main}>
+              <h3>
+                Answer Of Your Question based on your Quran
+              </h3>
+              <form onSubmit={onSubmit}>
+             
 
-      <main className={styles.main}>
-        <img src="/dog.png" className={styles.icon} alt="" />
-        <h3>Name my pet</h3>
-        <form onSubmit={onSubmit}>
-          <input
-            type="text"
-            name="animal"
-            placeholder="Enter an animal"
-            value={animalInput}
-            onChange={(e) => setAnimalInput(e.target.value)}
-          />
-          <input type="submit" value="Generate names" />
-        </form>
-        <div className={styles.result}>{result}</div>
-      </main>
+               
+
+
+                  <label>
+                        Question
+                  </label>
+                  <input
+                      type="text"
+                      name="Question"
+                      placeholder="Enter the Question"
+                      value={Question}
+                      onChange={(e) => setQuestion(e.target.value)}
+                  />
+                  <input type="submit" value="Give Answer" />
+              </form>
+              {loading && (
+                  <div>
+                      <h3>Looking for the best Answer...</h3>
+                  </div>
+              )}
+              <div
+                  dangerouslySetInnerHTML={{ __html: result }}
+              />
+          </main>
     </div>
-  );
+  )
 }
+
+export default index
